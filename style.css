@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: rgb(199, 204, 216);
+}
+table {
+  border: 5px solid black !important;
+}
+td, th {
+  border: 3px solid black !important;
+}
+label {
+  margin-left: 80%;
+}
+.close{
+  margin: -1rem -1rem -1rem 0 !important;
+  outline: none !important;
+}
+.modal-header{
+  flex-direction: row-reverse;
+}
+.dont-display-alert{
+  display: none;
+}
+.red-color{
+  color: red;
+}
+.black-color{
+  color: black;
+}
+.cursor{
+  cursor: initial !important;
+  vertical-align: middle;
+}
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  font-family: "Yekan", sans-serif;
+}
+.container {
+  width: 700px;
+  background-color: rgb(255, 255, 255);
+}
+
+h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  font-family: "Yekan";
+}
+#task {
+  color: rgb(169, 181, 181);
+  font-family: "Yekan", sans-serif;
+  font-size: 35px;
+}
+.btn {
+  border-radius: 0;
+}
+
+#btn-holder {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+#btn-completed {
+  background-color: orange;
+  color: white;
+  margin-right: 2px;
+}
+#btn-completed:hover {
+  background-color: rgb(203, 133, 5);
+  color: white;
+}
+#btn-clear {
+  background-color: rgb(255, 102, 0);
+  color: white;
+}
+#btn-clear:hover {
+  background-color: rgb(205, 85, 5);
+  color: white;
+}
+p {
+  font-weight: 600;
+  font-family: "Yekan";
+}
+
+#enter {
+  color: #fdfdfd;
+  font-size: 13px;
+}
+
+ul {
+  text-align: left;
+  margin-top: 10px;
+}
+
+li {
+  width: 740px;
+  list-style: none;
+  color: #ffffff;
+  padding-left: 10px;
+  text-transform: capitalize;
+  font-weight: 600;
+  border: 2px solid rgb(135, 139, 147);
+  margin-bottom: 10px;
+  background: rgb(172, 176, 186);
+  transition: all 0.75s ease;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  -o-transition: all 0.5 ease;
+  font-family: "Yekan";
+  cursor: pointer;
+}
+.mybtn {
+  width: 20px;
+  padding: 0px 20px;
+  background-color: coral;
+  color: white;
+  font-size: 25px;
+}
+.mybtn:hover {
+  background-color: rgb(253, 99, 43);
+}
+.mybtn:active {
+  outline-style: none;
+}
+li:hover {
+  background: rgb(135, 139, 147);
+}
+
+li > button {
+  font-weight: normal;
+  background: orange;
+  border: none;
+  float: right;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+input {
+  min-width: 90%;
+  padding: 10px;
+  font-family: "Yekan";
+}
+
+.done {
+  background: #7fd291 !important;
+  color: #000000;
+  text-decoration: line-through;
+}
+
+.delete {
+  display: none;
+}
