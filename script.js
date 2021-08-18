@@ -108,6 +108,7 @@ function addPlanAfterClick(event) {
       });
       $("#addPlanModal").modal("hide");
       clearAddModal();
+      listOfPlans.sort( compareElements );
       createListElement();
     }
   } else {
@@ -120,6 +121,15 @@ function addModalInputChecker() {
     InputPlanStartTime.value.length > 0 &&
     InputPlanEndTime.value.length > 0
   );
+}
+function compareElements( a, b ) {
+  if ( a.startTime < b.startTime ){
+    return -1;
+  }
+  if ( a.startTime > b.startTime ){
+    return 1;
+  }
+  return 0;
 }
 function clearAddModal() {
   InputPlanName.value = "";
