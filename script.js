@@ -88,7 +88,7 @@ function deleteItemFromList() {
 }
 function addPlanAfterClick(event) {
   event.preventDefault();
-  if (true) {
+  if (addModalInputChecker()) {
     if (editMode) {
       listOfPlans[editId].name = InputPlanName.value;
       listOfPlans[editId].startTime = InputPlanStartTime.value;
