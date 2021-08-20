@@ -1,3 +1,3 @@
 # pure-js-task
-just for fun
+use just js and bootstrap
 

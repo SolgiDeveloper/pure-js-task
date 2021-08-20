@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Apasay</title>
+    <title>pure javaScript plan setter</title>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <!-- Bootstrap CSS -->
     <link
@@ -43,7 +43,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="addPlanModalLabel">افزودن/ویرایش برنامه</h5>
+            <h5 class="modal-title" id="addPlanModalLabel">ایجاد برنامه</h5>
             <button type="button" class="close" id="closeAddModal" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -72,6 +72,8 @@
               </div>
               
               <div id="alert-add-modal" class="dont-display-alert text-center alert alert-danger" role="alert" dir="rtl">لطفا همه ی فیلد ها را پر کنید!</div>
+              <div id="alert-add-time-to-modal" class="dont-display-alert text-center alert alert-danger" role="alert" dir="rtl">ساعت پایان باید بعد از ساعت شروع باشد.</div>
+              <div id="alert-hourly-interference-modal" class="dont-display-alert text-center alert alert-danger" role="alert" dir="rtl">بازه زمانی وارد شده دارای تداخل زمانی با سایر آیتم های غیر قفل می باشد.</div>
               <button id="addPlanBtn" type="submit" class="btn btn-outline-dark">ذخیره</button>
             </form>
             <!--  -->

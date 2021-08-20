@@ -4,11 +4,16 @@ let InputPlanStartTime = document.getElementById("InputPlanStartTime");
 let InputPlanEndTime = document.getElementById("InputPlanEndTime");
 let PlanLock = document.getElementById("PlanLock");
 let alertAddModal = document.getElementById("alert-add-modal");
+let alertAddTimeToModal = document.getElementById("alert-add-time-to-modal");
+let alertHourlyInterferenceModal = document.getElementById("alert-hourly-interference-modal");
 let addModalCloseBtn = document.getElementById("closeAddModal");
+let addPlanModalLabel = document.getElementById("addPlanModalLabel");
+let addPlanModal = document.getElementById("addPlanModal");
 let tbody = document.querySelector("tbody");
 let listOfPlans = [];
 let editMode = false;
 let editId = 0;
+
 function createListElement() {
   tbody.innerHTML = "";
   let items = listOfPlans.length;
@@ -61,6 +66,7 @@ function createListElement() {
         button.addEventListener("click", function () {
           editMode = true;
           editId = id;
+          setModalHeader();
           InputPlanName.value = listOfPlans[id].name;
           InputPlanStartTime.value = listOfPlans[id].startTime;
           InputPlanEndTime.value = listOfPlans[id].endTime;
@@ -74,9 +80,7 @@ function createListElement() {
       if (className === "fa-trash") {
         button.addEventListener("click", function () {
           // button.parentNode.parentNode.remove();
-          console.log(listOfPlans, id);
           listOfPlans.splice(button.getAttribute("id"), 1);
-          console.log(listOfPlans, id);
           createListElement();
         });
       }
@@ -89,17 +93,17 @@ function deleteItemFromList() {
 function addPlanAfterClick(event) {
   event.preventDefault();
   if (addModalInputChecker()) {
-    if (editMode) {
+    if (editMode && !timeInputChecker()) {
       listOfPlans[editId].name = InputPlanName.value;
       listOfPlans[editId].startTime = InputPlanStartTime.value;
       listOfPlans[editId].endTime = InputPlanEndTime.value;
       listOfPlans[editId].planIsLock = `${PlanLock.checked}`;
-      console.log(listOfPlans);
       $("#addPlanModal").modal("hide");
       clearAddModal();
+      listOfPlans.sort(compareElements);
       createListElement();
       editMode = false;
-    } else {
+    } else if (!editMode && !timeInputChecker()) {
       listOfPlans.push({
         name: `${InputPlanName.value}`,
         startTime: `${InputPlanStartTime.value}`,
@@ -108,8 +112,10 @@ function addPlanAfterClick(event) {
       });
       $("#addPlanModal").modal("hide");
       clearAddModal();
-      listOfPlans.sort( compareElements );
+      listOfPlans.sort(compareElements);
       createListElement();
+    } else if (timeInputChecker()) {
+      alertAddTimeToModal.classList.remove("dont-display-alert");
     }
   } else {
     alertAddModal.classList.remove("dont-display-alert");
@@ -122,11 +128,18 @@ function addModalInputChecker() {
     InputPlanEndTime.value.length > 0
   );
 }
-function compareElements( a, b ) {
-  if ( a.startTime < b.startTime ){
+function timeInputChecker() {
+  if (InputPlanEndTime.value <= InputPlanStartTime.value) {
+    return true;
+  } else {
+    return false;
+  }
+}
+function compareElements(a, b) {
+  if (a.startTime < b.startTime) {
     return -1;
   }
-  if ( a.startTime > b.startTime ){
+  if (a.startTime > b.startTime) {
     return 1;
   }
   return 0;
@@ -136,7 +149,17 @@ function clearAddModal() {
   InputPlanStartTime.value = "";
   InputPlanEndTime.value = "";
   PlanLock.checked = false;
+  editMode = false;
   alertAddModal.classList.add("dont-display-alert");
+  alertAddTimeToModal.classList.add("dont-display-alert");
+}
+function setModalHeader(){
+  if(editMode){
+    addPlanModalLabel.textContent = `(${listOfPlans[editId].name}) ویرایش برنامه`
+  } else {
+    addPlanModalLabel.textContent = "ایجاد برنامه"
+  }
 }
 addPlanBtn.addEventListener("click", addPlanAfterClick);
 addModalCloseBtn.addEventListener("click", clearAddModal);
+addPlanModal.addEventListener("click", setModalHeader);
