@@ -13,6 +13,7 @@ let tbody = document.querySelector("tbody");
 let listOfPlans = [];
 let editMode = false;
 let editId = 0;
+let listCheckerCounter = 0;
 
 function createListElement() {
   tbody.innerHTML = "";
@@ -79,7 +80,6 @@ function createListElement() {
       tr.appendChild(td);
       if (className === "fa-trash") {
         button.addEventListener("click", function () {
-          // button.parentNode.parentNode.remove();
           listOfPlans.splice(button.getAttribute("id"), 1);
           createListElement();
         });
@@ -87,38 +87,77 @@ function createListElement() {
     }
   }
 }
-function deleteItemFromList() {
-  console.log(this.id);
-}
 function addPlanAfterClick(event) {
   event.preventDefault();
   if (addModalInputChecker()) {
+    if (timeInputChecker()) {
+      timeAlertAdd();
+      mainAlertRemove();
+    } else {
+      timeAlertRemove();
+      mainAlertRemove();
+    }
     if (editMode && !timeInputChecker()) {
-      listOfPlans[editId].name = InputPlanName.value;
-      listOfPlans[editId].startTime = InputPlanStartTime.value;
-      listOfPlans[editId].endTime = InputPlanEndTime.value;
-      listOfPlans[editId].planIsLock = `${PlanLock.checked}`;
-      $("#addPlanModal").modal("hide");
-      clearAddModal();
-      listOfPlans.sort(compareElements);
-      createListElement();
-      editMode = false;
+      listCheckerCounter = 0;
+      listOfPlans.forEach(addItemTolistChecker);
+      if(listCheckerCounter % 2 === 0){
+        timeInterferenceAlertRemove();
+        listOfPlans[editId].name = InputPlanName.value;
+        listOfPlans[editId].startTime = InputPlanStartTime.value;
+        listOfPlans[editId].endTime = InputPlanEndTime.value;
+        listOfPlans[editId].planIsLock = `${PlanLock.checked}`;
+        $("#addPlanModal").modal("hide");
+        clearAddModal();
+        listOfPlans.sort(compareElements);
+        createListElement();
+        editMode = false;
+      }else {
+        timeInterferenceAlertAdd();
+      }
     } else if (!editMode && !timeInputChecker()) {
-      listOfPlans.push({
-        name: `${InputPlanName.value}`,
-        startTime: `${InputPlanStartTime.value}`,
-        endTime: `${InputPlanEndTime.value}`,
-        planIsLock: `${PlanLock.checked}`,
-      });
-      $("#addPlanModal").modal("hide");
-      clearAddModal();
-      listOfPlans.sort(compareElements);
-      createListElement();
+      listCheckerCounter = 0;
+      listOfPlans.forEach(addItemTolistChecker);
+      if(listCheckerCounter % 2 === 0){
+        timeInterferenceAlertRemove();
+        listOfPlans.push({
+          name: `${InputPlanName.value}`,
+          startTime: `${InputPlanStartTime.value}`,
+          endTime: `${InputPlanEndTime.value}`,
+          planIsLock: `${PlanLock.checked}`,
+        });
+        $("#addPlanModal").modal("hide");
+        clearAddModal();
+        listOfPlans.sort(compareElements);
+        createListElement();
+      }else {
+        timeInterferenceAlertAdd();
+      }
     } else if (timeInputChecker()) {
-      alertAddTimeToModal.classList.remove("dont-display-alert");
+      mainAlertRemove();
+      timeAlertAdd();
     }
   } else {
-    alertAddModal.classList.remove("dont-display-alert");
+    mainAlertAdd();
+    if (timeInputChecker()) {
+      timeAlertAdd();
+    } else {
+      timeAlertRemove();
+    }
+  }
+}
+function addItemTolistChecker(item, index) {
+  console.log(index,editId);
+  if (
+    (InputPlanStartTime.value < item.endTime &&
+    InputPlanStartTime.value > item.startTime) ||
+    (InputPlanEndTime.value > item.startTime &&
+    InputPlanEndTime.value < item.endTime) ||
+    (item.startTime > InputPlanStartTime.value &&
+    item.endTime < InputPlanEndTime.value)
+  ) {
+    if(index !== editId){
+      listCheckerCounter++
+    }
   }
 }
 function addModalInputChecker() {
@@ -129,11 +168,7 @@ function addModalInputChecker() {
   );
 }
 function timeInputChecker() {
-  if (InputPlanEndTime.value <= InputPlanStartTime.value) {
-    return true;
-  } else {
-    return false;
-  }
+  return InputPlanEndTime.value <= InputPlanStartTime.value ? true : false;
 }
 function compareElements(a, b) {
   if (a.startTime < b.startTime) {
@@ -150,15 +185,35 @@ function clearAddModal() {
   InputPlanEndTime.value = "";
   PlanLock.checked = false;
   editMode = false;
+  listCheckerCounter = 0;
+  mainAlertRemove();
+  timeAlertRemove();
+  timeInterferenceAlertRemove();
+}
+function setModalHeader() {
+  if (editMode) {
+    addPlanModalLabel.textContent = `(${listOfPlans[editId].name}) ویرایش برنامه`;
+  } else {
+    addPlanModalLabel.textContent = "ایجاد برنامه";
+  }
+}
+function mainAlertAdd() {
+  alertAddModal.classList.remove("dont-display-alert");
+}
+function mainAlertRemove() {
   alertAddModal.classList.add("dont-display-alert");
+}
+function timeAlertAdd() {
+  alertAddTimeToModal.classList.remove("dont-display-alert");
+}
+function timeAlertRemove() {
   alertAddTimeToModal.classList.add("dont-display-alert");
 }
-function setModalHeader(){
-  if(editMode){
-    addPlanModalLabel.textContent = `(${listOfPlans[editId].name}) ویرایش برنامه`
-  } else {
-    addPlanModalLabel.textContent = "ایجاد برنامه"
-  }
+function timeInterferenceAlertAdd() {
+  alertHourlyInterferenceModal.classList.remove("dont-display-alert");
+}
+function timeInterferenceAlertRemove() {
+  alertHourlyInterferenceModal.classList.add("dont-display-alert");
 }
 addPlanBtn.addEventListener("click", addPlanAfterClick);
 addModalCloseBtn.addEventListener("click", clearAddModal);
