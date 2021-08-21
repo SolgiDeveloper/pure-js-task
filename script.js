@@ -12,7 +12,7 @@ let addPlanModal = document.getElementById("addPlanModal");
 let tbody = document.querySelector("tbody");
 let listOfPlans = [];
 let editMode = false;
-let editId = 0;
+let editId = null;
 let listCheckerCounter = 0;
 
 function createListElement() {
@@ -146,7 +146,6 @@ function addPlanAfterClick(event) {
   }
 }
 function addItemTolistChecker(item, index) {
-  console.log(index,editId);
   if (
     (InputPlanStartTime.value < item.endTime &&
     InputPlanStartTime.value > item.startTime) ||
@@ -156,9 +155,69 @@ function addItemTolistChecker(item, index) {
     item.endTime < InputPlanEndTime.value)
   ) {
     if(index !== editId){
-      listCheckerCounter++
+      // item.planIsLock === "false" ? listCheckerCounter++ : planSpliter(item, index);
+      if(item.planIsLock === "false"){
+        listCheckerCounter++
+      } else {
+        planSpliter(item, index);
+      }
     }
   }
+}
+function planSpliter(item, index) {
+  if(item.planIsLock === "true"){
+  if(InputPlanStartTime.value < item.endTime &&
+    InputPlanStartTime.value > item.startTime && 
+    item.endTime < InputPlanEndTime.value){
+      listOfPlans.splice(index + 1, 0, {
+        name: `${InputPlanName.value}`,
+        startTime: `${item.endTime}`,
+        endTime: `${InputPlanEndTime.value}`,
+        planIsLock: `${PlanLock.checked}`,
+      });
+      $("#addPlanModal").modal("hide");
+      listOfPlans.sort(compareElements);
+      createListElement();
+      clearAddModal();
+  } else if( 
+    InputPlanEndTime.value > item.startTime &&
+    InputPlanEndTime.value < item.endTime &&
+    InputPlanStartTime.value < item.startTime){
+      listOfPlans.splice(index - 1, 0, {
+        name: `${InputPlanName.value}`,
+        startTime: `${InputPlanStartTime.value}`,
+        endTime: `${item.startTime}`,
+        planIsLock: `${PlanLock.checked}`,
+      });
+      $("#addPlanModal").modal("hide");
+      listOfPlans.sort(compareElements);
+      createListElement();
+      clearAddModal();
+    } else if(
+      InputPlanStartTime.value < item.startTime &&
+      InputPlanEndTime.value > item.endTime) {
+        listOfPlans.splice(index - 1, 0, {
+          name: `${InputPlanName.value}`,
+          startTime: `${InputPlanStartTime.value}`,
+          endTime: `${item.startTime}`,
+          planIsLock: `${PlanLock.checked}`,
+        });
+        listOfPlans.splice(index + 2, 0, {
+          name: `${InputPlanName.value}`,
+          startTime: `${item.endTime}`,
+          endTime: `${InputPlanEndTime.value}`,
+          planIsLock: `${PlanLock.checked}`,
+        });
+        $("#addPlanModal").modal("hide");
+        listOfPlans.sort(compareElements);
+        createListElement();
+        clearAddModal();
+    }
+  }
+  setTimeout(() => {
+      listOfPlans.shift();
+      createListElement();
+  }, 10);
 }
 function addModalInputChecker() {
   return (
