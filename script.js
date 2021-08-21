@@ -155,7 +155,6 @@ function addItemTolistChecker(item, index) {
     item.endTime < InputPlanEndTime.value)
   ) {
     if(index !== editId){
-      // item.planIsLock === "false" ? listCheckerCounter++ : planSpliter(item, index);
       if(item.planIsLock === "false"){
         listCheckerCounter++
       } else {
