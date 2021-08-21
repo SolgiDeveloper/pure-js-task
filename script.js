@@ -19,6 +19,7 @@ function createListElement() {
   tbody.innerHTML = "";
   let items = listOfPlans.length;
   for (let item = 0; item < items; item++) {
+    if(listOfPlans[item].name.length > 0){
     let tr = document.createElement("tr");
     let th = document.createElement("th");
     let td = document.createElement("td");
@@ -30,6 +31,7 @@ function createListElement() {
     createTheBtn(item, tr, td, "fa-pen");
     createTheBtn(item, tr, td, "fa-trash");
     tbody.appendChild(tr);
+    }
   }
   function appendNameToList(item, tr) {
     let td = document.createElement("td");
@@ -213,10 +215,6 @@ function planSpliter(item, index) {
         clearAddModal();
     }
   }
-  setTimeout(() => {
-      listOfPlans.shift();
-      createListElement();
-  }, 10);
 }
 function addModalInputChecker() {
   return (
